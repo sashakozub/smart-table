@@ -1,13 +1,4 @@
-import {
-    createComparison,
-    defaultRules
-} from "../lib/compare.js";
-
-// @todo: #4.3 — настроить компаратор
-const compare = createComparison(defaultRules);
-
 export function initFiltering(elements, indexes) {
-    // @todo: #4.1 — заполнить выпадающие списки опциями
     Object.keys(indexes).forEach((elementName) => {
         elements[elementName].append(
             ...Object.values(indexes[elementName]).map(name => {
@@ -22,7 +13,6 @@ export function initFiltering(elements, indexes) {
     });
 
     return (data, state, action) => {
-        // @todo: #4.2 — обработать очистку поля
         if (action && action.name === 'clear') {
             const field = action.dataset.field;
             const input = action.parentElement.querySelector('input');
@@ -31,14 +21,35 @@ export function initFiltering(elements, indexes) {
             state[field] = '';
         }
 
-        const filterState = {
-            date: state.date,
-            customer: state.customer,
-            seller: state.seller,
-            totalFrom: state.totalFrom,
-            totalTo: state.totalTo
-        };
+        return data.filter(row => {
+            const date = String(state.date ?? '').toLowerCase();
+            const customer = String(state.customer ?? '').toLowerCase();
+            const seller = String(state.seller ?? '');
+            const totalFrom = parseFloat(state.totalFrom);
+            const totalTo = parseFloat(state.totalTo);
+            const total = parseFloat(row.total);
 
-        return data.filter(row => compare(row, state));
+            if (date && !String(row.date).toLowerCase().includes(date)) {
+                return false;
+            }
+
+            if (customer && !String(row.customer).toLowerCase().includes(customer)) {
+                return false;
+            }
+
+            if (seller && row.seller !== seller) {
+                return false;
+            }
+
+            if (!Number.isNaN(totalFrom) && total < totalFrom) {
+                return false;
+            }
+
+            if (!Number.isNaN(totalTo) && total > totalTo) {
+                return false;
+            }
+
+            return true;
+        });
     }
 }
