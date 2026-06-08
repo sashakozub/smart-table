@@ -31,21 +31,14 @@ export function initFiltering(elements, indexes) {
             state[field] = '';
         }
 
-        // @todo: #4.5 — отфильтровать данные используя компаратор
-        return data
-            .filter(row => compare(row, state))
-            .filter(row => {
-                const total = parseFloat(String(row.total).replace(/\s/g, ''));
+        const filterState = {
+            date: state.date,
+            customer: state.customer,
+            seller: state.seller,
+            totalFrom: state.totalFrom,
+            totalTo: state.totalTo
+        };
 
-                if (state.totalFrom && total < parseFloat(state.totalFrom)) {
-                    return false;
-                }
-
-                if (state.totalTo && total > parseFloat(state.totalTo)) {
-                    return false;
-                }
-
-                return true;
-            });
+        return data.filter(row => compare(row, filterState));
     }
 }
