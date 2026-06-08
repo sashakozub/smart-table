@@ -9,6 +9,10 @@ export function initSearching(searchField) {
 
     return (data, state, action) => {
         // @todo: #5.2 — применить компаратор
+        if (!state[searchField]) {
+            return data;
+        }
+
         return data.filter(row => compare(row, state));
     }
 }

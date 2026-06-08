@@ -39,6 +39,6 @@ export function initFiltering(elements, indexes) {
             totalTo: state.totalTo
         };
 
-        return data.filter(row => compare(row, filterState));
+        return data.filter(row => compare(row, state));
     }
 }
