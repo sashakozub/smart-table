@@ -31,7 +31,15 @@ export function initFiltering(elements, indexes) {
             state[field] = '';
         }
 
+        const filterState = {
+            date: state.date,
+            customer: state.customer,
+            seller: state.seller,
+            totalFrom: state.totalFrom,
+            totalTo: state.totalTo
+        };
+
         // @todo: #4.5 — отфильтровать данные используя компаратор
-        return data.filter(row => compare(row, state));
+        return data.filter(row => compare(row, filterState));
     }
 }
