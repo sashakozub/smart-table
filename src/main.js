@@ -11,8 +11,6 @@ import {initPagination} from "./components/pagination.js";
 import {initSorting} from "./components/sorting.js";
 import {initFiltering} from "./components/filtering.js";
 import {initSearching} from "./components/searching.js";
-// @todo: подключение
-
 
 // Исходные данные используемые в render()
 const {data, ...indexes} = initData(sourceData);
@@ -24,14 +22,14 @@ const {data, ...indexes} = initData(sourceData);
 function collectState() {
     const state = processFormData(new FormData(sampleTable.container));
 
-    const rowsPerPage = parseInt(state.rowsPerPage);    // приведём количество страниц к числу
-    const page = parseInt(state.page ?? 1);                // номер страницы по умолчанию 1 и тоже число
+    const rowsPerPage = parseInt(state.rowsPerPage);
+    const page = parseInt(state.page ?? 1);
 
-    return {                                            // расширьте существующий return вот так
+    return {
         ...state,
         rowsPerPage,
         page
-};
+    };
 }
 
 /**
@@ -39,8 +37,9 @@ function collectState() {
  * @param {HTMLButtonElement?} action
  */
 function render(action) {
-    let state = collectState(); // состояние полей из таблицы
-    let result = [...data]; // копируем для последующего изменения
+    const state = collectState();
+    let result = [...data];
+
     // @todo: использование
     result = applySearching(result, state, action);
     result = applyFiltering(result, state, action);
@@ -59,9 +58,11 @@ const sampleTable = initTable({
 
 // @todo: инициализация
 const applySearching = initSearching('search');
-const applyFiltering = initFiltering(sampleTable.filter.elements, {    // передаём элементы фильтра
-    searchBySeller: indexes.sellers                                    // для элемента с именем searchBySeller устанавливаем массив продавцов
+
+const applyFiltering = initFiltering(sampleTable.filter.elements, {
+    searchBySeller: indexes.sellers
 });
+
 const applySorting = initSorting([
     sampleTable.header.elements.sortByDate,
     sampleTable.header.elements.sortByTotal
