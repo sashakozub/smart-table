@@ -1,15 +1,9 @@
 export function initSearching(searchField) {
-    return (data, state, action) => {
-        const value = String(state[searchField] ?? '').trim().toLowerCase();
+    return (query, state, action) => {
+        const search = String(state[searchField] ?? '').trim();
 
-        if (!value) {
-            return data;
-        }
-
-        return data.filter(row => {
-            return ['date', 'customer', 'seller'].some(field => {
-                return String(row[field]).toLowerCase().includes(value);
-            });
-        });
-    }
+        return search
+            ? Object.assign({}, query, { search })
+            : query;
+    };
 }
